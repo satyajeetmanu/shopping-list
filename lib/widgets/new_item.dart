@@ -27,9 +27,6 @@ class _NewItemState extends State<NewItem> {
         category: _selectedCategory,
       ));
     }
-    print(_enteredName);
-    print(_enteredQuantity);
-    print(_selectedCategory);
   }
 
   @override

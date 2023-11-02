@@ -29,26 +29,54 @@ class _GroceryListState extends State<GroceryList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addItem,
-        child: const Icon(Icons.add),
-      ),
-      appBar: AppBar(
-        title: const Text('Grocery List'),
-      ),
-      body: ListView.builder(
+    Widget content =
+        const Center(child: Text('List is empty.. try adding some items!'));
+
+    if (_groceryList.isNotEmpty) {
+      content = ListView.builder(
         itemCount: _groceryList.length,
-        itemBuilder: (ctx, index) => ListTile(
-          title: Text(_groceryList[index].name),
-          leading: Container(
-            height: 24,
-            width: 24,
-            color: _groceryList[index].category.color,
+        itemBuilder: (ctx, index) => Dismissible(
+          key: ValueKey(_groceryList[index].id),
+          onDismissed: (direction) {
+            final currentItem = _groceryList[index];
+            setState(() {
+              _groceryList.removeAt(index);
+            });
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Item deleted'),
+                action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      setState(() {
+                        _groceryList.insert(index, currentItem);
+                      });
+                    }),
+              ),
+            );
+          },
+          background: Container(color: Colors.red),
+          child: ListTile(
+            title: Text(_groceryList[index].name),
+            leading: Container(
+              height: 24,
+              width: 24,
+              color: _groceryList[index].category.color,
+            ),
+            trailing: Text(_groceryList[index].quantity.toString()),
           ),
-          trailing: Text(_groceryList[index].quantity.toString()),
         ),
-      ),
-    );
+      );
+    }
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: _addItem,
+          child: const Icon(Icons.add),
+        ),
+        appBar: AppBar(
+          title: const Text('Grocery List'),
+        ),
+        body: content);
   }
 }
