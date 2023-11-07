@@ -1,0 +1,6 @@
+> HTTP is a standardised protocol used to communicate back and forth between a frontend and a backend.
+
+> The frontend sends an HTTP request to backend(usually consists of URL, method, header and body), then the
+    backend processes the request, and sends a HTTP response back to the frontend(usually consists of headers 
+    and body), which can be used by the frontend to update the UI.
+    
