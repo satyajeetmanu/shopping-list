@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shopping_list/data/categories.dart';
-import 'package:shopping_list/data/dummy_items.dart';
 import 'package:shopping_list/models/grocery_item.dart';
 import 'package:shopping_list/widgets/new_item.dart';
 
@@ -17,6 +16,8 @@ class GroceryList extends StatefulWidget {
 
 class _GroceryListState extends State<GroceryList> {
   List<GroceryItem> _groceryList = [];
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +48,7 @@ class _GroceryListState extends State<GroceryList> {
 
     setState(() {
       _groceryList = loadedItems;
+      _isLoading = false;
     });
   }
 
@@ -66,45 +68,48 @@ class _GroceryListState extends State<GroceryList> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = ListView.builder(
-      itemCount: _groceryList.length,
-      itemBuilder: (ctx, index) => Dismissible(
-        key: ValueKey(_groceryList[index].id),
-        onDismissed: (direction) {
-          final currentItem = _groceryList[index];
-          setState(() {
-            _groceryList.removeAt(index);
-          });
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Item deleted'),
-              action: SnackBarAction(
-                  label: 'UNDO',
-                  onPressed: () {
-                    setState(() {
-                      _groceryList.insert(index, currentItem);
-                    });
-                  }),
-            ),
-          );
-        },
-        background: Container(color: Colors.red),
-        child: ListTile(
-          title: Text(_groceryList[index].name),
-          leading: Container(
-            height: 24,
-            width: 24,
-            color: _groceryList[index].category.color,
-          ),
-          trailing: Text(_groceryList[index].quantity.toString()),
-        ),
-      ),
-    );
+    Widget content =
+        const Center(child: Text('List is empty.. try adding some items!'));
 
-    if (_groceryList.isEmpty) {
-      content =
-          const Center(child: Text('List is empty.. try adding some items!'));
+    if (_isLoading) {
+      content = const Center(child: CircularProgressIndicator());
+    }
+    if (_groceryList.isNotEmpty) {
+      content = ListView.builder(
+        itemCount: _groceryList.length,
+        itemBuilder: (ctx, index) => Dismissible(
+          key: ValueKey(_groceryList[index].id),
+          onDismissed: (direction) {
+            final currentItem = _groceryList[index];
+            setState(() {
+              _groceryList.removeAt(index);
+            });
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Item deleted'),
+                action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      setState(() {
+                        _groceryList.insert(index, currentItem);
+                      });
+                    }),
+              ),
+            );
+          },
+          background: Container(color: Colors.red),
+          child: ListTile(
+            title: Text(_groceryList[index].name),
+            leading: Container(
+              height: 24,
+              width: 24,
+              color: _groceryList[index].category.color,
+            ),
+            trailing: Text(_groceryList[index].quantity.toString()),
+          ),
+        ),
+      );
     }
     return Scaffold(
         floatingActionButton: FloatingActionButton(
