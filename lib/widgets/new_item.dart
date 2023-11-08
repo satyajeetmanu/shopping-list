@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shopping_list/data/categories.dart';
 import 'package:shopping_list/models/category.dart';
-import 'package:shopping_list/models/grocery_item.dart';
-
 import 'package:http/http.dart' as http;
 
 class NewItem extends StatefulWidget {
@@ -28,7 +26,7 @@ class _NewItemState extends State<NewItem> {
         'shopping-list.json',
       );
 
-      final response = await http.post(
+      await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode(
@@ -39,9 +37,6 @@ class _NewItemState extends State<NewItem> {
           },
         ),
       );
-
-      print(response.body);
-      print(response.statusCode);
 
       if (!context.mounted) {
         return;
