@@ -97,9 +97,11 @@ class _GroceryListState extends State<GroceryList> {
 
     final response = await http.delete(url);
     if (response.statusCode >= 400) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text(
-              'Item could not be deleted.. Please try again later')));
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Item could not be deleted.. Please try again later')));
       setState(() {
         _groceryList.insert(index, item);
       });

@@ -3,4 +3,5 @@
 > The frontend sends an HTTP request to backend(usually consists of URL, method, header and body), then the
     backend processes the request, and sends a HTTP response back to the frontend(usually consists of headers 
     and body), which can be used by the frontend to update the UI.
-    
+
+> The format of HTTP requests being sent and the HTTP responses received depends on the backend. 
