@@ -5,3 +5,6 @@
     and body), which can be used by the frontend to update the UI.
 
 > The format of HTTP requests being sent and the HTTP responses received depends on the backend. 
+
+> The 'late' keyword used in initialization of a variable tells dart that the initial value of the varialbe may 
+    be null but it will have a value before its being used the first time.
